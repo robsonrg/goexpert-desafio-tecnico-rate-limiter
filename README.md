@@ -76,3 +76,9 @@ curl http://localhost:8080/sample
 ## ou passando uma `API_KEY`
 curl http://localhost:8080/sample -H 'API_KEY: somevalue'
 ```
+
+Testes automatizados
+
+```sh
+go test ./test/api_test.go
+```
