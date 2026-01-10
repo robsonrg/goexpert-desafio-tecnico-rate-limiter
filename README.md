@@ -45,40 +45,57 @@ Entrega:
 - Utilize docker/docker-compose para que possamos realizar os testes de sua aplicação.
 - O servidor web deve responder na porta 8080.
 
+# Funcionalidades
+
+- Limite de requisições por IP ou por token de acesso
+- Configuração de limites e tempos de bloqueio via variáveis de ambiente ou arquivo .env.
+- Middleware para fácil integração com servidores HTTP
+- Persistência dos dados de limitação utilizando Redis
+- Resposta com código HTTP 429 quando o limite é excedido
+
 # Executando a aplicação
 
-### Pré-requisitos
+### Configurando as variáveis de ambiente
 
-- Ajuste as variáveis de ambiente no arquivo `.env`
+1. Crie o arquivo de configurações, após baixar o projeto.
+
+    ```sh
+    cp .env.example .env
+    ```
+
+2. Edite as variáveis de ambiente no arquivo `.env`
 
     ```yaml
     REDIS_HOST=redis:6379 # Endereço onde Redis esta rodando dentro do docker
-    REDIS_PASSWORD=""
+    REDIS_PASSWORD="123"
     RATE_LIMIT_REQUESTS_PER_SECOND_IP=100 # Quantidade de requisições permitidas por segundo por um mesmo IP
     RATE_LIMIT_REQUESTS_PER_SECOND_TOKEN=10 # Quantidade de requisições permitidas por segundo por um mesmo token
     ```
 
 ### Iniciando os serviços
 
-Inicie os containers através do docker compose:
+1. Inicie os containers através do docker compose:
 
-```sh
-docker-compose up -d
-```
+    ```sh
+    #*lembre de configurar o .env antes de iniciar os containers
+    docker-compose up -d
+    ```
 
 ### Testando a aplicação
 
-A aplicação roda na porta 8080 e expoe o endpoint `/sample` para testes:
+1. A aplicação roda na porta 8080 e expoe o endpoint `/sample` para testes:
 
-```sh
-curl http://localhost:8080/sample
+    ```sh
+    curl http://localhost:8080/sample
 
-## ou passando uma `API_KEY`
-curl http://localhost:8080/sample -H 'API_KEY: somevalue'
-```
+    ## ou passando uma `API_KEY`
+    curl http://localhost:8080/sample -H 'API_KEY: somevalue'
+    ```
 
-Testes automatizados
+    O sistema verificará a quantidade de acessos e aplicará as regras de limitação conforme configurado.
 
-```sh
-go test ./test/api_test.go
-```
+2. Testes automatizados
+
+    ```sh
+    go test ./test/api_test.go
+    ```
